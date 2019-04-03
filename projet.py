@@ -50,7 +50,9 @@ def calcul_oov_print():
         name = i.split('.')
         print(name[1],':',calcul_oov(train,test),'%')
 
-##def calcul_kl_divergence():
+#Calcul de la KL divergence des 3-grammes characters des données train et test 
+def calcul_kl_divergence():
+    pass
 
 corpus_size()
 print()
