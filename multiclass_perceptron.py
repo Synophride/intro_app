@@ -17,11 +17,37 @@ class Perceptron:
         self.n_updates = 0
 
     '''Dot-product the features and current weights and return
-    the best class.'''    
+    the best class.'''
+    '''
+    [00:15]Julien Guyot: et du coup comment tu fais pour faire le produit ? :sueur~2:
+    [00:16]Alban: 
+    For i in list ou for i in dict.keys():
+      Product += weights[i][label]
+    '''
     def predict(self, features):
-        pass 
+        scores = score(features)
+        max_ = -15000000
+        best_lbl = None
+        for label, value in score:
+            if(value > max_):
+                best_lbl = label
+                max_ = value
+
+        return best_lbl
+
+    def train(self, examples, labels):
+        pass
     
-    
+    '''        
+    product = 0
+    for i in features.keys():
+    products += weights[i][label]
+    '''
+    def product_for_lbl(self, lbl, features):
+        product = 0
+        for i in features.keys():
+            product += weights[i][lbl]
+        return product
     """
     Parameters
     ----------
@@ -34,7 +60,12 @@ class Perceptron:
     if not None, the score is computed only for these labels
     """
     def score(self, features, labels=None):
-        pass
+        if labels == None:
+            labels = self.labels
+        score = dict()
+        for lbl in labels:
+            score[lbl] = product_for_lbl(lbl, features)
+        return score
 
     def update(self, truth, guess, features):
         def upd_feat(label, feature, v):
