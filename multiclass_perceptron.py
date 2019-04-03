@@ -1,5 +1,10 @@
 from collections import defaultdict
-
+    '''
+    [00:15]Julien Guyot: et du coup comment tu fais pour faire le produit ? :sueur~2:
+    [00:16]Alban: 
+    For i in list ou for i in dict.keys():
+      Product += weights[i][label]
+    '''
 class Perceptron:
     # censé effectuer la traduction    
     def __init__(self, labels):
@@ -20,41 +25,55 @@ class Perceptron:
 
     '''Dot-product the features and current weights and return
     the best class.'''
-    '''
-    [00:15]Julien Guyot: et du coup comment tu fais pour faire le produit ? :sueur~2:
-    [00:16]Alban: 
-    For i in list ou for i in dict.keys():
-      Product += weights[i][label]
+    ''' 
+    Prédit le label des données en entrées (features) 
+    paramètre : 
+      - Features, la donnée codée via une représentation éparse
+    rend : 
+      - best_lbl, le label prédit 
     '''
     def predict(self, features):
-        scores = self.score(features)
-        max_ = 0
-        best_lbl = None
+        scores = self.score(features) # Calcul, pour chaque label, du "score" de la donnée (= si la donnée appartient probablement au label)
+        max_ = 0        # valeur maximale rencontrée (peut être initialisé n'importe comment) 
+        best_lbl = None # label associé à la valeur max
+
         for label in scores.keys():
             value = scores[label]
-            if(value > max_ or best_lbl == None):
-                best_lbl = label
-                max_ = value
+            if(best_lbl == None or value > max_): # si on trouve quelque chose de plus probable
+                best_lbl = label # mise à jour du meilleur label
+                max_ = value 
         return best_lbl
 
+    """
+    Entraîne le modèle sur une donnée de test. 
+     Pour cela, le modèle va tenter de prédire un label (pred), et comparer 
+    ce label avec le vrai label y.
+     Ensuite, il mettra à jour ses paramètres si y != pred via la méthode update
+    params: 
+      - features : un exemple
+      - label : label associé à l'exemple
+    retour:
+      - 1 si bonne prédiction
+      - 0 sinon
+    """
     def train(self, features, label):
         y = label   # "vrai" label
         x = features # exemple
         pred = self.predict(x) # prédiction du perceptron
         self.update(y, pred, x) # mise à jour, si nécessaire
-        return (1 if y == pred else 0)
+        return (1 if y == pred else 0) 
 
-                    
-    '''        
-    product = 0
-    for i in features.keys():
-    products += weights[i][label]
+
+    '''
+    Pour calculer le "score", il faut faire le produit matriciel (ou produit scalaire, 
+    je suis pas sûr). Pour faire ce dernier, il faut faire ça (source Alban©)
     '''
     def product_for_lbl(self, lbl, features):
         product = 0
         for i in features.keys():
             product += self.weights[i][lbl]
         return product
+    
     """
     Parameters
     ----------
@@ -66,14 +85,28 @@ class Perceptron:
     - labels, a subset of self.labels
     if not None, the score is computed only for these labels
     """
+    """
+    Calcul du 'score' pour chacun des labels.
+    
+    param: 
+     - features : un exemple
+     - labels : une liste de labels, desquels il faut calculer le score. 
+    Si None, on calcule le score pour tous les labels (self.labels)
+    rend :
+     - score : un dict(), associant à chaque label(=clef) un score (value)
+    """
     def score(self, features, labels=None):
         if labels == None:
             labels = self.labels
+            
         score = dict()
-        for lbl in labels:
+        
+        for lbl in labels: # pour chaque label, calculer le score
             score[lbl] = self.product_for_lbl(lbl, features)
+            
         return score
 
+    # fonction de mise à jour
     def update(self, truth, guess, features):
         def upd_feat(label, feature, v):
             param = (label, feature)
@@ -124,7 +157,6 @@ class Perceptron:
         """
         De-serialization of a perceptron
         """
-
         self.weights = defaultdict(lambda: defaultdict(float), data["weights"])
         # ensure we are no longer able to continue training
         self._accum = None
