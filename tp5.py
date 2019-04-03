@@ -1,12 +1,13 @@
 import numpy
 import json
-import multiclass_perceptron
-path='./multiclass_corpora/'
+import multiclass_perceptron as mp
+path='./fr/'
 
-full_path = path + 'fr.ud.train.json'
+full_path = path + 'fr.pud.train.json'
 train_set = json.load(open(full_path))
-soccer_set=json.load(open(path + 'foot.json'))
-mc_set = json.load(open(path + 'minecraft.json'))
+test_set = json.load(open(path + 'fr.pud.test.json'))
+#soccer_set=json.load(open(path + 'foot.json'))
+#mc_set = json.load(open(path + 'minecraft.json'))
 
 np_arr = numpy.array(train_set)
 print(np_arr.shape)
@@ -34,6 +35,7 @@ clé = critère + valeur du critère
 valeur = 1
 """
 def build_sparse2(sentence, pos):
+    ret = dict()
     word = sentence[pos]
     ret['l3c'+word[-3:]] = 1
     ret['lc'+word[-1]] = 1
@@ -41,11 +43,10 @@ def build_sparse2(sentence, pos):
     ret['w'+word]      = 1
     ret['first_upper'+str(1 if word[0].isupper() else 0)] = 1
     ret['all_upper'+str(1 if word.isupper() else 0)] = 1 
-    ret['w_-1'+ (sentence[pos-1] if pos > 0 else '', 0)] = 1
-    ret['w_-2'+ (sentence[pos-2] if pos > 1 else '', 0)] = 1
-    ret['w_+1'+ (sentence[pos+1] if pos < len(sentence)-1 else '', 0) ] = 1 
-    ret['w_+2'+ (sentence[pos+2] if pos < len(sentence)-2 else '', 0)] = 1
-    ret['f'] = 0
+    ret['w_-1'+ (sentence[pos-1] if pos > 0 else '')] = 1
+    ret['w_-2'+ (sentence[pos-2] if pos > 1 else '')] = 1
+    ret['w_+1'+ (sentence[pos+1] if pos < len(sentence)-1 else '') ] = 1 
+    ret['w_+2'+ (sentence[pos+2] if pos < len(sentence)-2 else '')] = 1
     return ret
 
 
@@ -91,7 +92,35 @@ def build_sparse(counters, sentence, pos):
     ret['w_+2'] = word_c.get(sentence[pos+2] if pos < len(sentence)-2 else '', 0)
     ret['f'] = 0
     return ret
+####
+
+def test(test_set, perceptron):
+    good = 0
+    total= 0
+    for x in test_set:
+        sentence = x[0]
+        labels   = x[1]
+        for i in range(len(sentence)):
+            representation= build_sparse2(sentence, i)
+            y = labels[i]
+            ypred = perc.predict(representation)
+            if(y == ypred):
+                good +=1
+            total += 1
+    return (good, total)
+
+perc = mp.Perceptron(lbl_set)
+
+(g, t) = test(test_set, perc)
+print('Avant entraînement : ', (g/t) * 100, '% justes')
+# x = un tableau [[phrase]; [labels]]
+for x in train_set :
+    sentence= x[0] 
+    labels  = x[1]
+    for i in range(len(sentence)):
+        representation = build_sparse2(sentence, i)
+        perc.train(representation, labels[i])
 
 
-perc = Perceptron(lbl_set)
-
+(g, t) = test(test_set, perc)
+print('Après entraînement : ', (g/t) * 100, '% justes')

@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 class Perceptron:
     # censé effectuer la traduction    
     def __init__(self, labels):
@@ -25,19 +27,24 @@ class Perceptron:
       Product += weights[i][label]
     '''
     def predict(self, features):
-        scores = score(features)
-        max_ = -15000000
+        scores = self.score(features)
+        max_ = 0
         best_lbl = None
-        for label, value in score:
-            if(value > max_):
+        for label in scores.keys():
+            value = scores[label]
+            if(value > max_ or best_lbl == None):
                 best_lbl = label
                 max_ = value
-
         return best_lbl
 
-    def train(self, examples, labels):
-        pass
-    
+    def train(self, features, label):
+        y = label   # "vrai" label
+        x = features # exemple
+        pred = self.predict(x) # prédiction du perceptron
+        self.update(y, pred, x) # mise à jour, si nécessaire
+        return (1 if y == pred else 0)
+
+                    
     '''        
     product = 0
     for i in features.keys():
@@ -46,7 +53,7 @@ class Perceptron:
     def product_for_lbl(self, lbl, features):
         product = 0
         for i in features.keys():
-            product += weights[i][lbl]
+            product += self.weights[i][lbl]
         return product
     """
     Parameters
@@ -64,7 +71,7 @@ class Perceptron:
             labels = self.labels
         score = dict()
         for lbl in labels:
-            score[lbl] = product_for_lbl(lbl, features)
+            score[lbl] = self.product_for_lbl(lbl, features)
         return score
 
     def update(self, truth, guess, features):
@@ -101,7 +108,7 @@ class Perceptron:
                 if averaged:
                     new_feat_weights[label] = averaged
             self.weights[feat] = new_feat_weights
-
+        
     def __getstate__(self):
         """
         Serialization of a perceptron
