@@ -40,9 +40,8 @@ def calcul_oov(train_file, test_file):
                 nb_out_vocab += 1
     return (nb_out_vocab / (len(vocab_train) + nb_out_vocab)) * 100
 
-##def calcul_kl_divergence():
-    
-def calcul_oov_test():
+#Affichage de calcul_oov
+def calcul_oov_print():
     data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
     print("Pourcentage d'OOV des differents corpus:")  
     for i in data:
@@ -51,6 +50,9 @@ def calcul_oov_test():
         name = i.split('.')
         print(name[1],':',calcul_oov(train,test),'%')
 
+##def calcul_kl_divergence():
+
 corpus_size()
 print()
-calcul_oov_test()
+calcul_oov_print()
+
