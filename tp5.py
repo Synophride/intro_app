@@ -5,33 +5,29 @@ path='./fr/'
 
 full_path = path + 'fr.pud.train.json'
 train_set = json.load(open(full_path))
-test_set = json.load(open(path + 'fr.pud.test.json'))
-#soccer_set=json.load(open(path + 'foot.json'))
-#mc_set = json.load(open(path + 'minecraft.json'))
+test_set  = json.load(open(path + 'fr.foot.test.json'))
 
 np_arr = numpy.array(train_set)
-print(np_arr.shape)
-
-
 
 # Donne la liste des labels
 def mk_lbl_set(dataset):
     ret_dict = set()
-    for (w, l) in dataset:
+    for j in range(len(dataset)):
+        l = dataset[j][1]
         for i in l:
             ret_dict.add(i)
-        break
     return ret_dict
 
-lbl_set = mk_lbl_set(train_set)
+
+lbl_set = mk_lbl_set(np_arr)
 
     
 """
 Construit une représentation éparse a priori meilleure
 [00:11]Rémi:
-du coup, moi ce que j'ai fait c'est que mon dictionnaire est comme ça : 
-clé = critère + valeur du critère 
-valeur = 1
+  du coup, moi ce que j'ai fait c'est que mon dictionnaire est comme ça : 
+  clé = critère + valeur du critère 
+  valeur = 1
 """
 def build_sparse2(sentence, pos):
     ret = dict()
@@ -91,7 +87,6 @@ for x in train_set :
     for i in range(len(sentence)):
         representation = build_sparse2(sentence, i)
         perc.train(representation, labels[i])
-
 
 (g, t) = test(test_set, perc)
 print('Après entraînement : ', (g/t) * 100, '% justes')

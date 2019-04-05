@@ -1,10 +1,10 @@
 from collections import defaultdict
-    '''
-    [00:15]Julien Guyot: et du coup comment tu fais pour faire le produit ? :sueur~2:
-    [00:16]Alban: 
-    For i in list ou for i in dict.keys():
-      Product += weights[i][label]
-    '''
+'''
+[00:15]Julien Guyot: et du coup comment tu fais pour faire le produit ? :sueur~2:
+[00:16]Alban: 
+For i in list ou for i in dict.keys():
+Product += weights[i][label]
+'''
 class Perceptron:
     # censé effectuer la traduction    
     def __init__(self, labels):
