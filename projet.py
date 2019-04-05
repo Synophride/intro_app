@@ -4,12 +4,9 @@ import sys
 import numpy as np
 
 
-data_path = './corpus/'
-fr_path = data_path + 'fr/'
-en_path = data_path + 'en/'
+fr_path = 'fr/'
 
 fr_files = os.listdir(fr_path)
-en_diles = os.listdir(en_path)
 
 fr_json = dict()
 
@@ -51,10 +48,41 @@ def calcul_oov_print():
         print(name[1],':',calcul_oov(train,test),'%')
 
 #Calcul de la KL divergence des 3-grammes characters des données train et test 
-def calcul_kl_divergence():
-    pass
+def calcul_kl_divergence(train,test):
+    train_char = []
+    test_char = []
+    train_gram = []
+    test_gram = []
+    for i in train: 
+        for j in i[0]:
+            char_list = list(j)
+            word_list = []
+            for k in char_list:
+                word_list.append(k)
+            train_char.append(word_list)
+    for i in test: 
+        for j in i[0]:
+            char_list = list(j)
+            word_list = []
+            for k in char_list:
+                word_list.append(k)
+            test_char.append(word_list)
+    for i in range(len(train_char)):
+        for j in range(2,len(train_char[i])):
+            gram = train_char[i][j-2]+train_char[i][j-1]+train_char[i][j]
+            if gram not in train_gram:
+                train_gram.append(gram)
+    for i in range(len(test_char)):
+        for j in range(2,len(test_char[i])):
+            gram = test_char[i][j-2]+test_char[i][j-1]+test_char[i][j]
+            if gram not in test_gram:
+                test_gram.append(gram)
+
+
+
 
 corpus_size()
 print()
 calcul_oov_print()
-
+print()
+calcul_kl_divergence(fr_json['fr.sequoia.train.json'],fr_json['fr.sequoia.test.json'])
