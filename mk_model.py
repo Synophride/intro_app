@@ -150,4 +150,6 @@ print("pré-train :", str((good*100.)/total))
 train(perc, train_set, dcs)
 
 (g2, t2) = test(test_set, perc, dcs)
-print("post-train", str((g2*100.)/t2))
+print("post-train", str((g2*100.)/t2
+
+))
