@@ -3,7 +3,7 @@ import os
 import sys
 import numpy as np
 import math
-
+from itertools import product
 
 fr_path = 'fr/'
 
@@ -72,15 +72,15 @@ def kl_divergence_build(corpus):
             dictionary[i]=1
         else:
             dictionary[i]+=1
-    return dictionary,grams,len(alphabet),cpt
+    return dictionary,grams,alphabet,cpt
 
 def proba(trig,d,a,n):
     if trig not in d:
-        #return 1/(a**3+n-2)
-        return 1/(a+len(d)*(n-2))
+        return 1/(a**3+n-2)
+        #return 1/(a+len(d)*(n-2))
     else:
-        #return (d[trig]+1)/(a**3+n-2)
-        return (d[trig]+1)/(a+len(d)*(n-2))
+        return (d[trig]+1)/(a**3+n-2)
+        #return (d[trig]+1)/(a+len(d)*(n-2))
         
 
 def calcul_kl_divergence(corpus):
@@ -88,14 +88,15 @@ def calcul_kl_divergence(corpus):
     test = fr_json[corpus+'.test.json']
     d_train, g_train, alpha_train, n_train = kl_divergence_build(train)
     d_test, g_test, alpha_test, n_test = kl_divergence_build(test)
-    grams = g_train + g_test
+    alpha = alpha_test + alpha_train
+    grams = [product(alpha,repeat=3)]
     cpt = 0
     for gram in grams:
-        #train= proba(gram,d_train,alpha_train,n_train)
-        #test= proba(gram,d_test,alpha_test,n_test)
-        train= proba(gram,d_train,len(g_train),n_train)
-        test = proba(gram,d_test,len(g_test),n_test)
-        cpt = test*math.log(test/train)
+        train= proba(gram,d_train,len(alpha),n_train)
+        test= proba(gram,d_test,len(alpha),n_test)
+        #train= proba(gram,d_train,len(g_train),n_train)
+        #test = proba(gram,d_test,len(g_test),n_test)
+        cpt += test*math.log(test/train)
     print('KL_divergence de '+corpus+': '+ str(cpt))
 
     #N[tri_grams]/alphabet**n+lenth-n+1
