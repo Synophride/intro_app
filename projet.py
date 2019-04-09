@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import numpy as np
+import math
 
 
 fr_path = 'fr/'
@@ -48,36 +49,60 @@ def calcul_oov_print():
         print(name[1],':',calcul_oov(train,test),'%')
 
 #Calcul de la KL divergence des 3-grammes characters des données train et test 
-def calcul_kl_divergence(train,test):
-    train_char = []
-    test_char = []
-    train_gram = []
-    test_gram = []
-    for i in train: 
+def kl_divergence_build(corpus):
+    grams = []
+    alphabet = []
+    cpt = 0
+    for i in corpus:
+        sentence = ""
         for j in i[0]:
-            char_list = list(j)
-            word_list = []
-            for k in char_list:
-                word_list.append(k)
-            train_char.append(word_list)
-    for i in test: 
-        for j in i[0]:
-            char_list = list(j)
-            word_list = []
-            for k in char_list:
-                word_list.append(k)
-            test_char.append(word_list)
-    for i in range(len(train_char)):
-        for j in range(2,len(train_char[i])):
-            gram = train_char[i][j-2]+train_char[i][j-1]+train_char[i][j]
-            if gram not in train_gram:
-                train_gram.append(gram)
-    for i in range(len(test_char)):
-        for j in range(2,len(test_char[i])):
-            gram = test_char[i][j-2]+test_char[i][j-1]+test_char[i][j]
-            if gram not in test_gram:
-                test_gram.append(gram)
+            sentence+=j+" "
+        sentence = sentence[:-1]
+        char = list(sentence)
+        for k in range(len(char)):
+            cpt += 1
+            if char[k] not in alphabet:
+                alphabet.append(char[k])
+            if(k>=2):
+                gram = char[k-2]+ char[k-1] + char[k]
+                grams.append(gram)
+    dictionary = {}
+    for i in grams:
+        if i not in dictionary:
+            dictionary[i]=1
+        else:
+            dictionary[i]+=1
+    return dictionary,grams,len(alphabet),cpt
 
+def proba(trig,d,a,n):
+    if trig not in d:
+        #return 1/(a**3+n-2)
+        return 1/(a+len(d)*(n-2))
+    else:
+        #return (d[trig]+1)/(a**3+n-2)
+        return (d[trig]+1)/(a+len(d)*(n-2))
+        
+
+def calcul_kl_divergence(corpus):
+    train = fr_json[corpus+'.train.json']
+    test = fr_json[corpus+'.test.json']
+    d_train, g_train, alpha_train, n_train = kl_divergence_build(train)
+    d_test, g_test, alpha_test, n_test = kl_divergence_build(test)
+    grams = g_train + g_test
+    cpt = 0
+    for gram in grams:
+        #train= proba(gram,d_train,alpha_train,n_train)
+        #test= proba(gram,d_test,alpha_test,n_test)
+        train= proba(gram,d_train,len(g_train),n_train)
+        test = proba(gram,d_test,len(g_test),n_test)
+        cpt = test*math.log(test/train)
+    print('KL_divergence de '+corpus+': '+ str(cpt))
+
+    #N[tri_grams]/alphabet**n+lenth-n+1
+    # n = 3
+
+#Demandez la formule au prof
+        
 
 
 
@@ -85,4 +110,4 @@ corpus_size()
 print()
 calcul_oov_print()
 print()
-calcul_kl_divergence(fr_json['fr.sequoia.train.json'],fr_json['fr.sequoia.test.json'])
+calcul_kl_divergence('fr.sequoia')
