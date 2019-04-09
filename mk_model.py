@@ -14,14 +14,12 @@ def count_words(train_data):
     return dico
 
 # pê utiliser un set
-def get_n_most_used_words(wc, N=50):
+def get_n_most_used_words(wc, N=10):
     n = 0
     liste = []
     for i in sorted(wc.items(), key = lambda x : x[1], reverse = True):
         liste.append(i[0])
         n+=1
-        if(n == N):
-            break
     return liste
 
 def build_freqs_dicts(data, most_used_words):
