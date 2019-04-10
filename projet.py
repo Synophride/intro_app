@@ -2,14 +2,16 @@ import json
 import os
 import sys
 import numpy as np
+import json
+import os
+
 import math
 from itertools import product
-import multiclass_perceptron
 
-fr_path = 'fr/'
+import modele
 
+fr_path = './fr/'
 fr_files = os.listdir(fr_path)
-
 fr_json = dict()
 
 #Calcule la taille de chaque data 
@@ -24,6 +26,18 @@ def corpus_size():
             print(filename, ':', arr.shape[0])
         else:
             print(filename, ': 0')
+
+
+
+
+################################################
+################################################
+############
+############   CALCUL PERPLEXITE
+############
+################################################
+################################################
+
 
 #Calcule le pourcentage de mot donnés dans les datas test qui ne sont pas contenus dans leur train
 def calcul_oov(train_file, test_file):
@@ -120,6 +134,15 @@ def kl_display():
 #print()
 #calcul_kl_divergence()
 
+
+################################################
+################################################
+############
+############   MATRICE CONFUSION
+############
+################################################
+################################################
+
 #Création et affichage de la matrice de confusion, matrice 2D composé de [label_voulu][label_prédit] pour chaque mot du corpus
 def matrice_confusion(perceptron,corpus):
     dic = {}
@@ -139,12 +162,38 @@ def matrice_confusion(perceptron,corpus):
         for j in i.keys():
             row+= str(dic[i][j])+" "
         print(row)
-        
 
-#corpus_size()
-#print()
-#oov_display()
-#print()
-#It doesn't work
-#kl_display()
+
+################################################
+################################################
+############
+############   CHARGEMENT DES DONNEES 
+############
+################################################
+################################################
+
+path = './fr/'
+
+def load_files():
+    filenames = os.listdir(path)
+    files = dict()
+    for filename in filenames:
+        if not filename.strip().endswith("json"):
+            continue
+        rang = filename.split('.')
+
+        if files.get(rang[1], None) == None:
+            files[rang[1]] = dict()    
+        files[rang[1]][rang[2]] = json.load(open(path+filename))
+    return files
+
+
+# Donne la liste des labels du set
+def mk_lbl_set(dataset):
+    ret_dict = set()
+    for j in range(len(dataset)):
+        l = dataset[j][1]
+        for i in l:
+            ret_dict.add(i)
+    return ret_dict
 

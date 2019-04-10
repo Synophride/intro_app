@@ -8,5 +8,5 @@ import mk_model as ml
 
 # va entraîner les perceptrons avec train_data, le teste 
 def train_and_mk_confusions_matrix(train_data, test_data, mk_feature):
-    
+    pass
     
