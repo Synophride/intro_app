@@ -61,7 +61,7 @@ def test(test_set, perceptron):
         for i in range(len(sentence)):
             representation= build_sparse2(sentence, i)
             y = labels[i]
-            ypred = perc.predict(representation)
+            ypred = perceptron.predict(representation)
             if(y == ypred):
                 good +=1
             total += 1

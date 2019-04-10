@@ -11,7 +11,7 @@ def train_and_mk_confusion_matrix(train_data, test_data):
     m_tp = tp.Modele_tp5()
     m_tp.init_train(train_data)
     m_tp.train(train_data)
-
+    
     #    m_pj = ml.Modele_projet()
     # m_pj.init_train(train_data)
     # m_pj.train(train_data)
@@ -19,17 +19,21 @@ def train_and_mk_confusion_matrix(train_data, test_data):
     mc = pj.matrice_confusion(m_tp, train_data, test_data)
     key_list = sorted(mc.keys())
 
-    str_ret = '\t' + '\t'.join(sorted(mc[key_list[0]].keys())) + '\n' 
-    for k in key_list:
-        str_ret += k +'\t' #affichage du label
-        for j in sorted(mc[k].keys()):
-            str_ret += str(mc[k][j])+'\t'  # affichage du score 
-        str_ret += '\n'
+    pass
 
-    print(str_ret)
-
+def get_performances(train_set, test_set):
+    m_tp = tp.Modele_tp5()
+    m_tp.init_train(train_set)
+    m_tp.train(train_set)
+    (good, total) = m_tp.test(test_set)
+    ((amb_g, amb_t),(oov_g,oov_t)) = m_tp.test_ambigu_et_oov(test_set, train_set)
+    print("Performances générales :\t", good, '/', total)
+    print("Performances ambiguité :\t", amb_g, '/', amb_t)
+    print("Performances OOV : \t", oov_g, '/', oov_t)
+        
 data = pj.load_files()
 train = data['gsd']['train']
 test = data['gsd']['test']
 
-train_and_mk_confusion_matrix(train, test)
+#train_and_mk_confusion_matrix(train, test)
+get_performances(train, test)
