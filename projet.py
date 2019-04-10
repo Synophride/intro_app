@@ -58,14 +58,14 @@ def kl_divergence_build(corpus):
         for j in i[0]:
             sentence+=j+" "
         sentence = sentence[:-1]
-    char = list(sentence)
-    for k in range(len(char)):
-        cpt += 1
-        if char[k] not in alphabet:
-            alphabet.append(char[k])
-        if(k>=2):
-            gram = char[k-2]+ char[k-1] + char[k]
-            grams.append(gram)
+        char = list(sentence)
+        for k in range(len(char)):
+            cpt += 1
+            if char[k] not in alphabet:
+                alphabet.append(char[k])
+            if(k>=2):
+                gram = char[k-2]+ char[k-1] + char[k]
+                grams.append(gram)
     dictionary = {}
     for i in grams:
         if i not in dictionary:
@@ -105,11 +105,10 @@ def calcul_kl_divergence():
     for i in data:
         name = i.split('.')
         print(name[1],':',main_kl(i))
-        #print(name[1],':',main_kl(i)*100,'%')
 
-#Je ne sais pas comment fonctionne ce truc, pas grand monde le sait d'ailleurs mais voilà
 corpus_size()
 print()
 calcul_oov_print()
 print()
+#It doesn't work
 calcul_kl_divergence()
