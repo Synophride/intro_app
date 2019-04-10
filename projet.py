@@ -14,6 +14,40 @@ fr_path = './fr/'
 fr_files = os.listdir(fr_path)
 fr_json = dict()
 
+################################################
+################################################
+############
+############   CHARGEMENT DES DONNEES 
+############
+################################################
+################################################
+
+path = './fr/'
+
+def load_files():
+    filenames = os.listdir(path)
+    files = dict()
+    for filename in filenames:
+        if not filename.strip().endswith("json"):
+            continue
+        rang = filename.split('.')
+
+        if files.get(rang[1], None) == None:
+            files[rang[1]] = dict()    
+        files[rang[1]][rang[2]] = json.load(open(path+filename))
+    return files
+
+
+# Donne la liste des labels du set
+def mk_lbl_set(dataset):
+    ret_dict = set()
+    for j in range(len(dataset)):
+        l = dataset[j][1]
+        for i in l:
+            ret_dict.add(i)
+    return ret_dict
+
+
 #Calcule la taille de chaque data 
 def corpus_size():
     print("Nombre de phrase des differents corpus:")
@@ -143,57 +177,24 @@ def kl_display():
 ################################################
 ################################################
 
-#Création et affichage de la matrice de confusion, matrice 2D composé de [label_voulu][label_prédit] pour chaque mot du corpus
-def matrice_confusion(perceptron,corpus):
+#Création de la matrice de confusion, matrice 2D composé de [label_voulu][label_prédit] pour chaque mot du corpus
+def matrice_confusion(modele, train_set, test_set):
+    train_labels = mk_label_set(train_set)
+    test_labels  = mk_label_set( test_set)
     dic = {}
     #Creation d'un dictionnaire de labels
-    for i in perceptron.labels:
+    for i in test_labels:
         dic[i] = {}
-        for j in perceptron.labels:
+        for j in train_labels:
             dic[i][j] = 0
-    #Pour chaque mot du corpus, on itère [label_voulu][label_prédit]
+            
+    #Pour chaque mot du corpus, on incrémente [label_voulu][label_prédit]
     for i in range(len(corpus)):
-        for j in range(len(i[0])):
-            dic[corpus[i][1][j]][perceptron.predict(corpus[i][0][j])] += 1
+        sentence = i[0]
+        labels = i[1]
+        for j in range(len(sentence)):
+            prediction = modele.predict(sentence, j)
+            label = labels[j]
+            dic[label][prediction] = dic[label][prediction] + 1
     
-    #Affichage (approximatif)
-    for i in dic.keys():
-        row = ""
-        for j in i.keys():
-            row+= str(dic[i][j])+" "
-        print(row)
-
-
-################################################
-################################################
-############
-############   CHARGEMENT DES DONNEES 
-############
-################################################
-################################################
-
-path = './fr/'
-
-def load_files():
-    filenames = os.listdir(path)
-    files = dict()
-    for filename in filenames:
-        if not filename.strip().endswith("json"):
-            continue
-        rang = filename.split('.')
-
-        if files.get(rang[1], None) == None:
-            files[rang[1]] = dict()    
-        files[rang[1]][rang[2]] = json.load(open(path+filename))
-    return files
-
-
-# Donne la liste des labels du set
-def mk_lbl_set(dataset):
-    ret_dict = set()
-    for j in range(len(dataset)):
-        l = dataset[j][1]
-        for i in l:
-            ret_dict.add(i)
-    return ret_dict
-
+    return dic
