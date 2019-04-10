@@ -77,9 +77,11 @@ def kl_divergence_build(corpus):
 #Renvoie la probabilité d'un 3-gram
 def proba(trig,d,a,n):
     if trig not in d:
-        return 1/(a*3+(n-2))
+        return 1/(a**3+(n-2))
+        #return 1/(a*3+(n-2))
     else:
-        return (d[trig]+1)/(a*3+(n-2))
+        return (d[trig]+1)/(a**3+(n-2))
+        #return (d[trig]+1)/(a*3+(n-2))
         
 #Organise les 2 fonctions au-dessus en calcule la KL-Divergence
 def main_kl(corpus):
@@ -99,11 +101,13 @@ def main_kl(corpus):
 #Affichage de la KL divergence pour chaque corpus         
 def calcul_kl_divergence():
     data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
-    print("Pourcentage du KL Divergence des differents corpus:")  
+    print("KL Divergence des differents corpus:")  
     for i in data:
         name = i.split('.')
-        print(name[1],':',main_kl(i)*100,'%')
-    
+        print(name[1],':',main_kl(i))
+        #print(name[1],':',main_kl(i)*100,'%')
+
+#Je ne sais pas comment fonctionne ce truc, pas grand monde le sait d'ailleurs mais voilà
 corpus_size()
 print()
 calcul_oov_print()
