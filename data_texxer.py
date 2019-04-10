@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import data_importer as di
-
+import projet as pj
 datasets = di.load_files()
 path_output = './tex_descs/'
 N = 10
@@ -55,6 +55,15 @@ def parse_most_used_words(mow):
     retour += r'\caption{ Mots les plus utilisés } \label{Fig:muw}'
     return retour
 
+
+def mk_perplexity_tabular(corpus_name):
+    train_set = datasets[corpus_name]['train']
+    test_set  = datasets[corpus_name]['test']
+    perc_oov = pj.calcul_oov(train_set, test_set)
+    pass #todo 
+    
+
+
 def mk_label_histo(dico_lbl, path, name):
     labels = []
     nb = []
@@ -69,21 +78,26 @@ def mk_label_histo(dico_lbl, path, name):
     plt.clf()
     #     r'\begin{figure}[h] ' + '\n' \  
     #                + r'\end{figure} '
-    str_ret  =   r'\label{Fig:' + name + r'}' + '\n' \
-               + r'\caption{distribution des labels}' \
-               + r'\includegraphics[width=.7\linewidth]{' + name + r'}' + '\n' \
-
+    str_ret  =   r'\includegraphics[width=.7\linewidth]{' + name + r'}' + '\n' \
+               + r'\caption{distribution des labels}' 
+    #               + r'\label{Fig:' + name + r'}' + '\n' 
     return str_ret
         
 def parse_descriptors(dico_all):
     string_retour = ''
     for set_name in dico_all.keys():
-        written_str = r"\subsubsection{" + set_name + '} \n ' \
-                      + explanation_of_models.get(set_name, '')
-        
+        written_str = r"\subsubsection{" + set_name + ' } \n ' \
+                      + explanation_of_models.get(set_name, '')+ '\n\n'
+        oov_str = ''
         dico_name = dico_all[set_name]
-        for set_type in dico_all[set_name].keys():
-            if(set_type == 'dev'): 
+        
+        tr = dico_name.get("train", None)
+        te = dico_name.get("test", None)
+        if( tr != None and te != None ):
+            oov_str = r' Pourcentage de mots hors vocabulaire : ' + str(pj.calcul_oov(tr, te))  + '\n'
+        #written_str += oov_str
+        for set_type in sorted(dico_all[set_name].keys()):
+            if(set_type == 'dev'): # on oublie les Dev
                 continue
             
             dico = dico_name[set_type]
@@ -97,16 +111,15 @@ def parse_descriptors(dico_all):
             nb_examples = dico['length']
         
             written_str =  written_str \
-                           + r'\paragraph{' + set_type + '}' + '\n' \
-                           + r'\subparagraph{Nombre de phrases : }' + str(nb_examples) + '\n' \
+                           + r' \paragraph{' + set_type + r' } ' + '\n' \
+                           + r'\subparagraph{Nombre de phrases :} ' + str(nb_examples) + r'\\ ' + '\n' \
                            + r'\begin{figure}[H] \begin{minipage}{0.48\textwidth} \centering ' \
                            + str_muw + r'\end{minipage} ' + '\n' \
                            + r'\begin{minipage}{0.48\textwidth} \centering'+ '\n' \
                            + label_str + '\n' \
                            + r'\end{minipage}' + '\n' \
                            + r'\end{figure}'
-            #                          +  label_str + '\n'
-            # """r'\subparagraph{Distribution des labels}' +""" '\n
+            
         string_retour = string_retour + '\n\n\n' + written_str 
     x = open(path_output + 'description_donnees.tex', 'w')
     x.write(string_retour)
@@ -132,4 +145,4 @@ def write_descriptors():
 
 
 parse_descriptors(write_descriptors())
-            
+

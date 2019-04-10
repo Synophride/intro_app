@@ -3,7 +3,7 @@ import json
 import data_importer as di
 import math
 import multiclass_perceptron as mp
-
+import modele as m
 
 def count_words(train_data):
     dico = dict()
@@ -132,22 +132,32 @@ def init_dicts(train_set):
     dcs = build_freqs_dicts(train_set, muw)
     return dcs
 
+class Modele_projet(m.Modele):
+    def __init__(self):
+        self.dcs = None
+        self.lbls= None
+        self.p = None
+        pass
+    
+    def init_train(self, train_data):
+        self.dcs = init_dicts(train_data)
+        self.lbls= di.mk_lbl_set(train_data)
+        self.p = mp.Perceptron(lbls)
 
-data = di.load_files()
-train_set = data['gsd']['train']
-test_set = data['gsd']['test']
-print("initialisation des dicts")
-dcs = init_dicts(train_set)
-lbls = di.mk_lbl_set(train_set)
+    def train(self, train_data):
+        train(train_data, self.p, self.dcs)
 
-perc = mp.Perceptron(lbls)
+    def reset(self):
+        self.dcs = None
+        self.lbls= None
+        self.p = None
+        pass
 
-(good, total) = test(test_set, perc, dcs)
+    def predict(self, sentence, pos):
+        features = build_sparse(sentence, pos, self.dcs)
+        ypred = self.p.predict(features)
+        return ypred
 
-print("pré-train :", str((good*100.)/total))
-train(perc, train_set, dcs)
-
-(g2, t2) = test(test_set, perc, dcs)
-print("post-train", str((g2*100.)/t2
-
-))
+    # returns a tuple (good_predictions, nb_examples)
+    def test(self, test_data):
+        return test(test_data, self.p, dcs)

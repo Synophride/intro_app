@@ -1,5 +1,6 @@
 import numpy
 import json
+import modele
 import multiclass_perceptron as mp
 path='./fr/'
 
@@ -66,27 +67,41 @@ def test(test_set, perceptron):
             total += 1
     return (good, total)
 
+def train(train_set, perceptron):
+    for x in train_set :
+        sentence= x[0] 
+        labels  = x[1]
+        for i in range(len(sentence)):
+            representation = build_sparse2(sentence, i)
+            perceptron.train(representation, labels[i])
+
+                
+            
 ##############
-# exécution  #
+#   Modèle   #
 ##############
 
-print('Labels :')
-for i in lbl_set:
-    print(i)
-print('fin des labels')
+class Modele_tp5(modele.Modele):
+    def __init__(self):
+        self.lbls = None
+        self.p = None
+        pass
 
-perc = mp.Perceptron(lbl_set)
+    def init_train(self, train_data):
+        self.lbls = mk_lbl_set(train_data)
+        self.p = mp.Perceptron(self.lbls)
 
-(g, t) = test(test_set, perc)
-print('Avant entraînement : ', (g/t) * 100, '% justes')
+    def train(self, train_data):
+        train(train_data, self.p)
 
-# x = un tableau [[phrase]; [labels]]
-for x in train_set :
-    sentence= x[0] 
-    labels  = x[1]
-    for i in range(len(sentence)):
-        representation = build_sparse2(sentence, i)
-        perc.train(representation, labels[i])
+    def reset(self):
+        self.lbls = None
+        self.p = None
+        
+    def predict(self, sentence, pos):
+        representation = build_sparse2(sentence, pos)
+        return self.p.predict(representation)
 
-(g, t) = test(test_set, perc)
-print('Après entraînement : ', (g/t) * 100, '% justes')
+    def test(self, test_set):
+        return test(test_set, self.p)
+

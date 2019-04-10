@@ -30,13 +30,18 @@ def calcul_oov(train_file, test_file):
     for i in train_file:
         for j in i[0]:
             vocab_train.add(j)
-    
-    nb_out_vocab = 0
+    vocab_test = set()
     for i in test_file:
         for j in i[0]:
-            if j not in vocab_train:
-                nb_out_vocab += 1
-    return (nb_out_vocab / (len(vocab_train) + nb_out_vocab)) * 100
+            vocab_test.add(j)
+
+    nb_tr_vocab = len(vocab_train)
+    nb_out_vocab = 0
+    for i in vocab_test:
+        if(i not in vocab_train): 
+            nb_out_vocab +=1
+    
+    return (nb_out_vocab*100) / (nb_out_vocab + nb_tr_vocab)
 
 #Affichage de calcul_oov
 def calcul_oov_print():
@@ -108,8 +113,8 @@ def calcul_kl_divergence():
         #print(name[1],':',main_kl(i)*100,'%')
 
 #Je ne sais pas comment fonctionne ce truc, pas grand monde le sait d'ailleurs mais voilà
-corpus_size()
-print()
-calcul_oov_print()
-print()
-calcul_kl_divergence()
+#corpus_size()
+#print()
+#calcul_oov_print()
+#print()
+#calcul_kl_divergence()
