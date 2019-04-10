@@ -4,6 +4,7 @@ import sys
 import numpy as np
 import math
 from itertools import product
+import multiclass_perceptron
 
 fr_path = 'fr/'
 
@@ -44,7 +45,7 @@ def calcul_oov(train_file, test_file):
     return (nb_out_vocab*100) / (nb_out_vocab + nb_tr_vocab)
 
 #Affichage de calcul_oov
-def calcul_oov_print():
+def oov_display():
     data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
     print("Pourcentage d'OOV des differents corpus:")  
     for i in data:
@@ -63,14 +64,14 @@ def kl_divergence_build(corpus):
         for j in i[0]:
             sentence+=j+" "
         sentence = sentence[:-1]
-    char = list(sentence)
-    for k in range(len(char)):
-        cpt += 1
-        if char[k] not in alphabet:
-            alphabet.append(char[k])
-        if(k>=2):
-            gram = char[k-2]+ char[k-1] + char[k]
-            grams.append(gram)
+        char = list(sentence)
+        for k in range(len(char)):
+            cpt += 1
+            if char[k] not in alphabet:
+                alphabet.append(char[k])
+            if(k>=2):
+                gram = char[k-2]+ char[k-1] + char[k]
+                grams.append(gram)
     dictionary = {}
     for i in grams:
         if i not in dictionary:
@@ -104,13 +105,13 @@ def main_kl(corpus):
     return cpt
 
 #Affichage de la KL divergence pour chaque corpus         
-def calcul_kl_divergence():
+def kl_display():
     data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
     print("KL Divergence des differents corpus:")  
     for i in data:
         name = i.split('.')
         print(name[1],':',main_kl(i))
-        #print(name[1],':',main_kl(i)*100,'%')
+
 
 #Je ne sais pas comment fonctionne ce truc, pas grand monde le sait d'ailleurs mais voilà
 #corpus_size()
@@ -118,3 +119,32 @@ def calcul_kl_divergence():
 #calcul_oov_print()
 #print()
 #calcul_kl_divergence()
+
+#Création et affichage de la matrice de confusion, matrice 2D composé de [label_voulu][label_prédit] pour chaque mot du corpus
+def matrice_confusion(perceptron,corpus):
+    dic = {}
+    #Creation d'un dictionnaire de labels
+    for i in perceptron.labels:
+        dic[i] = {}
+        for j in perceptron.labels:
+            dic[i][j] = 0
+    #Pour chaque mot du corpus, on itère [label_voulu][label_prédit]
+    for i in range(len(corpus)):
+        for j in range(len(i[0])):
+            dic[corpus[i][1][j]][perceptron.predict(corpus[i][0][j])] += 1
+    
+    #Affichage (approximatif)
+    for i in dic.keys():
+        row = ""
+        for j in i.keys():
+            row+= str(dic[i][j])+" "
+        print(row)
+        
+
+#corpus_size()
+#print()
+#oov_display()
+#print()
+#It doesn't work
+#kl_display()
+
