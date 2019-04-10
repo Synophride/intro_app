@@ -48,7 +48,7 @@ def calcul_oov_print():
         name = i.split('.')
         print(name[1],':',calcul_oov(train,test),'%')
 
-#Calcul de la KL divergence des 3-grammes characters des données train et test 
+#Créer les dictionnaires 3-grams, l'alphabet et le nombre de caratères du corpus
 def kl_divergence_build(corpus):
     grams = []
     alphabet = []
@@ -58,14 +58,14 @@ def kl_divergence_build(corpus):
         for j in i[0]:
             sentence+=j+" "
         sentence = sentence[:-1]
-        char = list(sentence)
-        for k in range(len(char)):
-            cpt += 1
-            if char[k] not in alphabet:
-                alphabet.append(char[k])
-            if(k>=2):
-                gram = char[k-2]+ char[k-1] + char[k]
-                grams.append(gram)
+    char = list(sentence)
+    for k in range(len(char)):
+        cpt += 1
+        if char[k] not in alphabet:
+            alphabet.append(char[k])
+        if(k>=2):
+            gram = char[k-2]+ char[k-1] + char[k]
+            grams.append(gram)
     dictionary = {}
     for i in grams:
         if i not in dictionary:
@@ -74,41 +74,42 @@ def kl_divergence_build(corpus):
             dictionary[i]+=1
     return dictionary,grams,alphabet,cpt
 
+#Renvoie la probabilité d'un 3-gram
 def proba(trig,d,a,n):
     if trig not in d:
-        return 1/(a**3+n-2)
-        #return 1/(a+len(d)*(n-2))
+        return 1/(a**3+(n-2))
+        #return 1/(a*3+(n-2))
     else:
-        return (d[trig]+1)/(a**3+n-2)
-        #return (d[trig]+1)/(a+len(d)*(n-2))
+        return (d[trig]+1)/(a**3+(n-2))
+        #return (d[trig]+1)/(a*3+(n-2))
         
-
-def calcul_kl_divergence(corpus):
-    train = fr_json[corpus+'.train.json']
-    test = fr_json[corpus+'.test.json']
+#Organise les 2 fonctions au-dessus en calcule la KL-Divergence
+def main_kl(corpus):
+    train = fr_json[corpus+'train.json']
+    test = fr_json[corpus+'test.json']
     d_train, g_train, alpha_train, n_train = kl_divergence_build(train)
     d_test, g_test, alpha_test, n_test = kl_divergence_build(test)
     alpha = alpha_test + alpha_train
-    grams = [product(alpha,repeat=3)]
+    grams = g_train + g_test
     cpt = 0
     for gram in grams:
         train= proba(gram,d_train,len(alpha),n_train)
         test= proba(gram,d_test,len(alpha),n_test)
-        #train= proba(gram,d_train,len(g_train),n_train)
-        #test = proba(gram,d_test,len(g_test),n_test)
         cpt += test*math.log(test/train)
-    print('KL_divergence de '+corpus+': '+ str(cpt))
+    return cpt
 
-    #N[tri_grams]/alphabet**n+lenth-n+1
-    # n = 3
+#Affichage de la KL divergence pour chaque corpus         
+def calcul_kl_divergence():
+    data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
+    print("KL Divergence des differents corpus:")  
+    for i in data:
+        name = i.split('.')
+        print(name[1],':',main_kl(i))
+        #print(name[1],':',main_kl(i)*100,'%')
 
-#Demandez la formule au prof
-        
-
-
-
+#Je ne sais pas comment fonctionne ce truc, pas grand monde le sait d'ailleurs mais voilà
 corpus_size()
 print()
 calcul_oov_print()
 print()
-calcul_kl_divergence('fr.sequoia')
+calcul_kl_divergence()
