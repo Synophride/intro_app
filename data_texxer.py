@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
-import data_importer as di
 import projet as pj
-datasets = di.load_files()
+datasets = pj.load_files()
 path_output = './tex_descs/'
 N = 10
 

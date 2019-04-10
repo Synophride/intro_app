@@ -1,6 +1,6 @@
 import numpy
 import json
-import data_importer as di
+import projet as pj
 import math
 import multiclass_perceptron as mp
 import modele as m
@@ -141,7 +141,7 @@ class Modele_projet(m.Modele):
     
     def init_train(self, train_data):
         self.dcs = init_dicts(train_data)
-        self.lbls= di.mk_lbl_set(train_data)
+        self.lbls= pj.mk_lbl_set(train_data)
         self.p = mp.Perceptron(lbls)
 
     def train(self, train_data):
