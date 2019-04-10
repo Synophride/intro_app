@@ -4,6 +4,7 @@ import sys
 import numpy as np
 import math
 from itertools import product
+import multiclass_perceptron
 
 fr_path = 'fr/'
 
@@ -39,7 +40,7 @@ def calcul_oov(train_file, test_file):
     return (nb_out_vocab / (len(vocab_train) + nb_out_vocab)) * 100
 
 #Affichage de calcul_oov
-def calcul_oov_print():
+def oov_display():
     data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
     print("Pourcentage d'OOV des differents corpus:")  
     for i in data:
@@ -99,16 +100,41 @@ def main_kl(corpus):
     return cpt
 
 #Affichage de la KL divergence pour chaque corpus         
-def calcul_kl_divergence():
+def kl_display():
     data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
     print("KL Divergence des differents corpus:")  
     for i in data:
         name = i.split('.')
         print(name[1],':',main_kl(i))
 
-corpus_size()
-print()
-calcul_oov_print()
-print()
+#Création et affichage de la matrice de confusion, matrice 2D composé de [label_voulu][label_prédit] pour chaque mot du corpus
+def matrice_confusion(perceptron,corpus):
+    dic = {}
+    #Creation d'un dictionnaire de labels
+    for i in perceptron.labels:
+        dic[i] = {}
+        for j in perceptron.labels:
+            dic[i][j] = 0
+    #Pour chaque mot du corpus, on itère [label_voulu][label_prédit]
+    for i in range(len(corpus)):
+        for j in range(len(i[0])):
+            dic[corpus[i][1][j]][perceptron.predict(corpus[i][0][j])] += 1
+    
+    #Affichage (approximatif)
+    for i in dic.keys():
+        row = ""
+        for j in i.keys():
+            row+= str(dic[i][j])+" "
+        print(row)
+
+
+
+        
+
+#corpus_size()
+#print()
+#oov_display()
+#print()
 #It doesn't work
-calcul_kl_divergence()
+#kl_display()
+
