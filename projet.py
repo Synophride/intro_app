@@ -179,8 +179,8 @@ def kl_display():
 
 #Création de la matrice de confusion, matrice 2D composé de [label_voulu][label_prédit] pour chaque mot du corpus
 def matrice_confusion(modele, train_set, test_set):
-    train_labels = mk_label_set(train_set)
-    test_labels  = mk_label_set( test_set)
+    train_labels = mk_lbl_set(train_set)
+    test_labels  = mk_lbl_set( test_set)
     dic = {}
     #Creation d'un dictionnaire de labels
     for i in test_labels:
@@ -189,7 +189,7 @@ def matrice_confusion(modele, train_set, test_set):
             dic[i][j] = 0
             
     #Pour chaque mot du corpus, on incrémente [label_voulu][label_prédit]
-    for i in range(len(corpus)):
+    for i in test_set:
         sentence = i[0]
         labels = i[1]
         for j in range(len(sentence)):
