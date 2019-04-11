@@ -8,9 +8,10 @@
 \usepackage{adjustbox}
 
 \begin{document}
+\section{Introduction}
 \section{Présentation des données}
-
 \input{description_donnees}
+\section{Présentation du perceptron} 
 \section{Résultats}
 \input{result_tp5}
 \include{result_pj}

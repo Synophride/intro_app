@@ -1,66 +1,14 @@
+import modele as m
+
 import numpy
 import json
 import projet as pj
 import math
 import multiclass_perceptron as mp
-import modele as m
-
-def count_words(train_data):
-    dico = dict()
-    for i in train_data:
-        sentence = i[0]
-        for word in sentence:
-            dico[word] = dico.get(word, 0) + 1
-    return dico
-
-# pê utiliser un set
-def get_n_most_used_words(wc, N=10):
-    n = 0
-    liste = []
-    for i in sorted(wc.items(), key = lambda x : x[1], reverse = True):
-        liste.append(i[0])
-        n+=1
-    return liste
-
-def build_freqs_dicts(data, most_used_words):
-    d_g = dict()
-    d_d = dict()
-    print('building freq')
-    for x in data:
-        print('incrément phrase')
-        for sentence in x[0]:
-            for pos in range(len(sentence)):
-                if (sentence[pos] in most_used_words):
-                    if(pos > 0):
-                        key = sentence[pos-1] + '|' + sentence[pos] 
-                        d_d[key] = d_d.get(key, 0) + 1
-                    if(pos < len(sentence)-1):
-                        key = sentence[pos] + '|' + sentence[pos+1] 
-                        d_g[key] = d_g.get(key, 0) + 1
-    return (d_g, d_d)
-
-def build_distributional(pos, sentence, d):
-    (d_g, d_d) = d
-    word = sentence[pos]
-    return_keyG = '0'
-    return_keyD = '0'
-    
-    if pos > 0 :
-        prev_word = sentence[pos - 1]
-        key = sentence[pos-1] + '|' + word
-        return_keyG = str(d_g.get(key, 1))
-    if(pos < len(sentence) - 1):
-        next_word = sentence[pos+1]
-        key = word + '|' + sentence[pos+1]
-        return_keyD = str(d_d.get(key, 1))
-
-    return (return_keyG, return_keyD)
     
 
 
-        
-    
-def build_sparse(sentence, pos, dcs):
+def build_sparse(sentence, pos):
     word = sentence[pos]
     ret = dict()
 
@@ -78,7 +26,6 @@ def build_sparse(sentence, pos, dcs):
     # binary shape  features
 
     #### 2. Distributional features
-    kg, kd = build_distributional(pos, sentence, dcs)
 
     # maydo : Adaptation des features suivantes au français
     #### 3. Suffix features
@@ -97,20 +44,21 @@ def build_sparse(sentence, pos, dcs):
     return ret
     
 #########
+
 """
 Accomplit des tests, sur des données de test, et en prenant en paramètre un perceptron
 params : 
   - test_set, les données de test
   - perceptron, le classifieur
 """
-def test(test_set, perceptron, dcs):
+def test(test_set, perceptron):
     good = 0 # nombre de bonnes prédictions 
     total= 0 # nombre de prédictions totales
     for x in test_set: 
         sentence = x[0] # tableau de mots
         labels   = x[1] # tableau de labels
         for i in range(len(sentence)):
-            representation= build_sparse(sentence, i, dcs)
+            representation= build_sparse(sentence, i)
             y = labels[i]
             ypred = perceptron.predict(representation)
             if(y == ypred):
@@ -120,47 +68,38 @@ def test(test_set, perceptron, dcs):
 
 
 # x = un tableau [[phrase]; [labels]]
-def train( data, perc, dcs):
+def train( data, perc):
     for x in data :
         sentence= x[0] 
         labels  = x[1]
         for i in range(len(sentence)):
-            representation = build_sparse(sentence, i, dcs)
+            representation = build_sparse(sentence, i)
             perc.train(representation, labels[i])
 
 
-def init_dicts(train_set):
-    wc  = count_words(train_set)
-    muw = get_n_most_used_words(wc)
-    dcs = build_freqs_dicts(train_set, muw)
-    return dcs
-
-class Modele_projet(m.Modele):
+class Modele_nodistrib(m.Modele):
     def __init__(self):
-        self.dcs = None
-        self.lbls= None
+        self.lbls = None
         self.p = None
         pass
     
     def init_train(self, train_data):
-        self.dcs = init_dicts(train_data)
         self.lbls= pj.mk_lbl_set(train_data)
         self.p = mp.Perceptron(self.lbls)
 
     def train(self, train_data):
-        train(train_data, self.p, self.dcs)
+        train(train_data, self.p)
 
     def reset(self):
-        self.dcs = None
         self.lbls= None
         self.p = None
         pass
 
     def predict(self, sentence, pos):
-        features = build_sparse(sentence, pos, self.dcs)
+        features = build_sparse(sentence, pos)
         ypred = self.p.predict(features)
         return ypred
 
     # returns a tuple (good_predictions, nb_examples)
     def test(self, test_data):
-        return test(test_data, self.p, self.dcs)
+        return test(test_data, self.p)

@@ -1,7 +1,8 @@
 import multiclass_perceptron as mp
 import projet as pj
 class Modele:
-    ## Non-initialisation du modèle. Ne fait rien
+
+    ## Constructeur qui ne fait rien
     def __init__(self):
         pass
 
