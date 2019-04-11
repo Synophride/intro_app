@@ -1,9 +1,9 @@
 
-import projet as pj
+import helpers as pj
 
 # modules implémentant divers modèles de features
-import tp5      as tp
-import mk_model as ml
+import modele_tp5      as tp
+import modele_pj_distrib as ml
 
 # va entraîner les perceptrons avec train_data, le teste 
 def train_and_mk_confusion_matrix(train_data, test_data):

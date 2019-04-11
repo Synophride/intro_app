@@ -1,7 +1,7 @@
 import projet as pj
-import tp5 as tp
-import mk_model as ml
-import no_distrib as nb
+import modele_tp5 as tp
+import modele_pj_distrib as ml
+import modele_pj_nodistrib as nb
 
 path_first_result = './tex_descs/'
 

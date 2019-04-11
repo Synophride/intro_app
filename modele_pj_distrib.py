@@ -1,6 +1,6 @@
 import numpy
 import json
-import projet as pj
+import helpers as pj
 import math
 import multiclass_perceptron as mp
 import modele as m
