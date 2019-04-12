@@ -150,15 +150,7 @@ def main_kl(corpus):
         cpt += test*math.log(test/train)
     return cpt
 
-#Affichage de la KL divergence pour chaque corpus         
-def kl_display():
-    data = ['fr.gsd.','fr.partut.','fr.sequoia.','fr.spoken.','fr.ftb.','fr.pud.'] 
-    print("KL Divergence des differents corpus:")  
-    for i in data:
-        name = i.split('.')
-        print(name[1],':',main_kl(i))
 
-        
         
 ################################################
 ################################################

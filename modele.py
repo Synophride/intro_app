@@ -1,5 +1,6 @@
 import multiclass_perceptron as mp
 import helpers as pj
+
 class Modele:
 
     ## Constructeur qui ne fait rien
