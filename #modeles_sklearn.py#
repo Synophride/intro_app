@@ -9,11 +9,11 @@ def mk_features(sentence, index):
     """ sentence: [w1, w2, ...], index: the index of the word """
     return {
         'word': sentence[index],
-        #'is_first': index == 0,
-        #'is_last': index == len(sentence) - 1,
+        'is_first': index == 0,
+        'is_last': index == len(sentence) - 1,
         'is_capitalized': sentence[index][0].upper() == sentence[index][0],
         'is_all_caps': sentence[index].upper() == sentence[index],
-        #'is_all_lower': sentence[index].lower() == sentence[index],
+        'is_all_lower': sentence[index].lower() == sentence[index],
         'prefix-1': sentence[index][0],
         'prefix-2': sentence[index][:2],
         'prefix-3': sentence[index][:3],
