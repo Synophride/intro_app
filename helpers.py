@@ -112,14 +112,14 @@ def kl_divergence_build(corpus):
         for j in i[0]:
             sentence+=j+" "
         sentence = sentence[:-1]
-        char = list(sentence)
-        for k in range(len(char)):
-            cpt += 1
-            if char[k] not in alphabet:
-                alphabet.append(char[k])
-            if(k>=2):
-                gram = char[k-2]+ char[k-1] + char[k]
-                grams.append(gram)
+    char = list(sentence)
+    for k in range(len(char)):
+        cpt += 1
+        if char[k] not in alphabet:
+            alphabet.append(char[k])
+        if(k>=2):
+            gram = char[k-2]+ char[k-1] + char[k]
+            grams.append(gram)
     dictionary = {}
     for i in grams:
         if i not in dictionary:
