@@ -128,14 +128,12 @@ def kl_divergence_build(corpus):
             dictionary[i]+=1
     return dictionary,grams,alphabet,cpt
 
-#Renvoie la probabilité d'un 3-gram
+#Renvoie la probabilité d'un 3-gram (Formule donnée par le prof)
 def proba(trig,d,a,n):
     if trig not in d:
-        return 1/(a**3+(n-2))
-        #return 1/(a*3+(n-2))
+        return 1/(a*3+(n-2))
     else:
-        return (d[trig]+1)/(a**3+(n-2))
-        #return (d[trig]+1)/(a*3+(n-2))
+        return (d[trig]+1)/(a*3+(n-2))
         
 #Organise les 2 fonctions au-dessus en calcule la KL-Divergence
 def main_kl(corpus):
@@ -159,14 +157,6 @@ def kl_display():
     for i in data:
         name = i.split('.')
         print(name[1],':',main_kl(i))
-
-
-#Je ne sais pas comment fonctionne ce truc, pas grand monde le sait d'ailleurs mais voilà
-#corpus_size()
-#print()
-#calcul_oov_print()
-#print()
-#calcul_kl_divergence()
 
 
 ################################################
