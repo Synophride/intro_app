@@ -4,11 +4,7 @@ import modele
 import multiclass_perceptron as mp
 path='./fr/'
 
-full_path = path + 'fr.pud.train.json'
-train_set = json.load(open(full_path))
-test_set  = json.load(open(path + 'fr.foot.test.json'))
 
-np_arr = numpy.array(train_set)
 
 # Donne la liste des labels
 def mk_lbl_set(dataset):
@@ -20,7 +16,7 @@ def mk_lbl_set(dataset):
     return ret_dict
 
 
-lbl_set = mk_lbl_set(np_arr)
+
 
     
 """
@@ -74,8 +70,7 @@ def train(train_set, perceptron):
         for i in range(len(sentence)):
             representation = build_sparse2(sentence, i)
             perceptron.train(representation, labels[i])
-
-                
+            
             
 ##############
 #   Modèle   #

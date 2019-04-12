@@ -1,5 +1,5 @@
 import multiclass_perceptron as mp
-import helpers as pj
+import projet as pj
 class Modele:
 
     ## Constructeur qui ne fait rien
@@ -58,5 +58,5 @@ class Modele:
                     if(ypred == lbl):
                         good_oov += 1
                     total_oov +=1
-            
+                    
         return ((good_amb, total_amb), (good_oov, total_oov)) 
