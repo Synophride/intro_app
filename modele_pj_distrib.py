@@ -56,16 +56,12 @@ def build_distributional(pos, sentence, d):
 
     return (return_keyG, return_keyD)
     
-
-
-        
-    
 def build_sparse(sentence, pos, dcs):
     word = sentence[pos]
     ret = dict()
 
     ret['word' + word] = 1
-    for i in range(1,3):
+    for i in range(1,5):
         ret['word_m' + str(i) + (sentence[pos - i] if (pos > i) else '')] = 1
         ret['word_p' + str(i) + (sentence[pos + i] if pos+i < len(sentence) else '')] = 1
     
@@ -76,24 +72,20 @@ def build_sparse(sentence, pos, dcs):
     ret['count_right' + str(len(sentence) - pos)] = 1
     # binary suffix features
     # binary shape  features
-
+    
     #### 2. Distributional features
     kg, kd = build_distributional(pos, sentence, dcs)
-
-    # maydo : Adaptation des features suivantes au français
+    
     #### 3. Suffix features
     ret['suffix_feat' + str(1 if word[-1] == 's' else 0)] = 1
     
     #### 4. Shape features
-    ret['shape' +
-        str(1 if any(char.isdigit() for char in word) else 0) +
-        str(1 if '-' in word else 0) +
-        str(1 if word.isupper() else 0) +
-        str(1 if word[-1] == 'é' else 0) +
-        str(1 if word[-2:] == 'er' else 0) +
-        str(1 if word[-3:] == 'ant' else 0) 
-    ] = 1
-
+    ret['isdig' + str(1 if any(char.isdigit() for char in word) else 0)] = 1
+    ret['hyphen' + str(1 if '-' in word else 0)]  = 1
+    ret['uppr' + str(1 if word.isupper() else 0)] = 1
+    ret['é' + str(1 if word[-1] == 'é' else 0)] = 1
+    ret['er' + str( 1 if word[-2:] == 'er' else 0)] = 1
+    ret['ant' + str(1 if word[-3:] == 'ant' else 0)] = 1
     return ret
     
 #########
@@ -147,8 +139,9 @@ class Modele_projet(m.Modele):
         self.lbls= pj.mk_lbl_set(train_data)
         self.p = mp.Perceptron(self.lbls)
 
-    def train(self, train_data):
-        train(train_data, self.p, self.dcs)
+    def train(self, train_data, epoch = 10):
+        for i in range(epoch):
+            train(train_data, self.p, self.dcs)
 
     def reset(self):
         self.dcs = None
@@ -164,3 +157,5 @@ class Modele_projet(m.Modele):
     # returns a tuple (good_predictions, nb_examples)
     def test(self, test_data):
         return test(test_data, self.p, self.dcs)
+    def get_str(self):
+        return "Perceptron distrib"

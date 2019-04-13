@@ -25,22 +25,18 @@ def build_sparse(sentence, pos):
     # binary suffix features
     # binary shape  features
 
-    #### 2. Distributional features
 
     # maydo : Adaptation des features suivantes au français
     #### 3. Suffix features
     ret['suffix_feat' + str(1 if word[-1] == 's' else 0)] = 1
     
     #### 4. Shape features
-    ret['shape' +
-        str(1 if any(char.isdigit() for char in word) else 0) +
-        str(1 if '-' in word else 0) +
-        str(1 if word.isupper() else 0) +
-        str(1 if word[-1] == 'é' else 0) +
-        str(1 if word[-2:] == 'er' else 0) +
-        str(1 if word[-3:] == 'ant' else 0) 
-    ] = 1
-
+    ret['isdig' + str(1 if any(char.isdigit() for char in word) else 0)] = 1
+    ret['hyphen' + str(1 if '-' in word else 0)]  = 1
+    ret['uppr' + str(1 if word.isupper() else 0)] = 1
+    ret['é' + str(1 if word[-1] == 'é' else 0)] = 1
+    ret['er' + str( 1 if word[-2:] == 'er' else 0)] = 1
+    ret['ant' + str(1 if word[-3:] == 'ant' else 0)] = 1
     return ret
     
 #########
@@ -87,8 +83,9 @@ class Modele_nodistrib(m.Modele):
         self.lbls= pj.mk_lbl_set(train_data)
         self.p = mp.Perceptron(self.lbls)
 
-    def train(self, train_data):
-        train(train_data, self.p)
+    def train(self, train_data, epoch = 10):
+        for i in range(epoch):
+            train(train_data, self.p)
 
     def reset(self):
         self.lbls= None
@@ -103,3 +100,6 @@ class Modele_nodistrib(m.Modele):
     # returns a tuple (good_predictions, nb_examples)
     def test(self, test_data):
         return test(test_data, self.p)
+
+    def get_str(self):
+        return "Perceptron nodistrib"

@@ -3,7 +3,7 @@ import helpers as pj
 
 class Modele:
 
-    ## Constructeur qui ne fait rien
+    ## Constructeur qui ne fait rien.
     def __init__(self):
         pass
 
@@ -12,17 +12,11 @@ class Modele:
     def init_train(self, train_data):
         pass
 
-    # Entrainement du modèle
-    def train(self, train_data):
+    # Entrainement du modèle.
+    def train(self, train_data, epoch = None):
         pass
 
-    # Remise à zéro du modèle (il faudra l'initialiser
-    # de nouveau avec init_train)
-    # peut-être inutile
-    def reset(self):
-        pass
-
-    # Prédiction d'un label. Renvoie le label prédit
+    # Prédiction d'un label. Renvoie le label prédit.
     def predict(self, sentence, pos):
         pass
 
@@ -30,6 +24,10 @@ class Modele:
     def test(self, test_data):
         pass
 
+    # donne une str indiquant quel est le type du classifieur
+    def get_str(self):
+        pass
+    
     # teste la réussite sur les mots ambigus (pouvant avoir deux labels différents)
     # et les mots inconnus dans l'ensemble de test
     def test_ambigu_et_oov(self, test_data, train_data):

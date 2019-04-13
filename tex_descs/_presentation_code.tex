@@ -1,11 +1,118 @@
 \section{Présentation du code}
 Le code est regroupé dans les fichiers suivants:
+\begin{description}
+\item[helpers.py] Regroupe des fonctions utiles pour le chargement des
+  données ou le test des résultats.
+\item[tex\_data\_describe.py et tex\_result\_describe.py] Regroupe des fonctions
+  utile pour (respectivement) décrire les données ou les
+  résultats vers un ou plusieurs fichiers \LaTeX
+\item[modele.py] fournit une interface commune aux différents
+  classifieurs. 
+\item[multiclass\_perceptron.py] Le perceptron multiclasse du TP5.
+\item[modele\_tp5.py] Le perceptron utilisé avec les features du TP
+  5.
+\item[modele\_pj\_distrib.py] Inclut le modèle de perceptron
+  implémenteant les 
+  features proposées dans le sujet du projet, incluant les
+  \emph{distributional features}.
+\item[modele\_pj\_nodistrib.py] Même chose que modele\_pj\_distrib,
+  sans les \emph{distributional features}
+\item[modeles\_sklearn.py] Utilise deux implémentations de
+  classifieurs provenant de la bibliothèque SKLearn.
+\end{description}
+
+\subsection{Description des classifieurs}
+Les classifieurs possèdent tous la même interface, qui est indiquée
+dans {\verb modele.py } \\ 
+L'algorithme de classification utilisé pour tous les modèles (hors
+ceux  provenant du
+module {\verb modeles_sklearn } ) est le perceptron implémenté
+dans {\verb multiclass_perceptron } Ainsi, seules les features sont
+différentes. \\ Chaque feature est décrite en fonction de la
+phrase $sentence$ , et du mot $w$ dont il faut prédire le label, qui
+est situé à la position $pos$ dans la phrase. 
+% TODO : mettre paragraph
+
+\paragraph{} {\verb Modele_tp5 } 
+
+Ce modèle implémente les features proposées lors du tp 5, qui sont les
+suivantes : \\
+
 \begin{itemize}
-\item[projet.py] Regroupe des fonctions utiles pour le chargement des
-  données ou pour tester les résultats
-\item[data\_texxer.py et results\_to\_tex.py] Regroupe des fonctions
-  utile pour (respectivement) décrire les données et décrire les
-  résultats en \LaTeX
-\item[modele.py] fournit une interface pour les différents
-  classifieurs
+\item Le mot $w$
+\item Les trois derniers caractères de $w$
+\item Le premier caractère de $w$
+\item Le dernier caractère de $w$
+\item un booléen indiquant si le premier caractère est une lettre
+  majuscule 
+\item un booléen indiquant si tout le mot est écrit en majuscule
+\item Le mot précédent dans la phrase
+\item Le mot situé à $pos - 2$ dans la phrase.
+\item Le mot suivant dans la phrase
+\item Le mot situé à $pos + 2$ dans la phrase.
+\end{itemize}
+
+Ces features sont implémentées dans la fonction
+{\verb build_sparse2 }, et le fichier contenant le Modele est
+{\verb modele_tp5.py }.
+
+
+\paragraph{} {\verb Modele_projet } et {\verb Modele_nodistrib } \\
+Implémentent les features proposées dans le sujet du projet : 
+\begin{itemize}
+\item $w$ 
+\item Les deux mots précédant est suivant $w$
+\item Le nombre de mots avant $w$ dans la phrase
+\item Le nombre de mots suivant $w$ dans la phrase
+\item Un booléen indiquant si le mot se finit par un s
+\item Un ensemble de booléens, indiquants respectivement si :
+  \begin{itemize}
+  \item le mot contient un chiffre
+  \item le mot contient un tiret
+  \item le mot est écrit en majuscules
+  \item le mot se finit en {\verb -é }
+  \item le mot se finit en {\verb -er }
+  \item le mot se finit en {\verb -ant }
+  \end{itemize}
+\item les \emph{ distributional features }. Elles sont est composées de deux
+  features, qu'on appellera respectivement ``distribution à
+  droite'' et ``distribution à gauche''.\\
+  Pour chaque mot $w$, on regarde le mot juste à droite $c$ (resp.juste à
+  gauche), et on calcule le nombre de fois où le nombre de couples
+  $w c$ (resp $c w$) apparaît dans le corpus de test. \\
+  Les deux features sont égales à ce nombre. On se limite à calculer
+  le nombre d'apparitions de ces couples pour $c$ faisant partie des
+  10 mots les plus utilisés.
+\end{itemize}
+La classe {\verb Modele_nodistrib } n'implémente pas les \emph{
+  distributional features}. \\
+Les deux classes se trouvent respectivement dans
+{\verb modele_pj_distrib } et {\verb modele_ph_nodistrib }
+
+\paragraph{} {\verb Modele_sklearn_Perceptron } et {\verb Modele_SKLearn_SVM }
+\\
+Les features sont construites à partir des informations suivantes :
+\begin{itemize}
+\item $w$
+\item un booléen indiquant si $w$ est écrit en lettres majuscules
+\item un booléen indiquant si $w$ commence par une lettre majuscule
+\item les trois dernières lettres du mot
+\item les deux dernières lettres du mot
+\item les trois premières lettres du mot
+\item Le mot précédent
+\item Le mot suivant
+\item un booléen indiquant si le mot est un nombre
+\item un booléen indiquant si le mot contient des lettres majuscules  
+\end{itemize}
+
+Le dictionnaire représentant les features est donné à une instance de
+la classe {\verb DictVectorizer }, qui ``transformera'' ces features
+en une forme acceptable pour le classifieur. Ensuite, la
+classification sera réalisée par une instance de {\verb Perceptron} ou
+  de {\verb LinearSVC }.
+
+
+
+  
+
   

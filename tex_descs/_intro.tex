@@ -1,0 +1,63 @@
+\section{Introduction}
+Ce projet porte sur
+l'étiquetage morpho-syntaxique, dit Part of Speach, d'un
+corpus.
+
+\subsection{Part of speech}
+L'étiquetage morpho-syntaxique est l'association à chaque mot d'un
+texte des informations grammaticales liées à ce même mot.
+
+
+Dans le cadre de ce projet, les informations grammaticales se limitent
+aux informations liés à la nature grammaticale des mots. Les natures
+possibles sont les suivantes: 
+
+
+\begin{description} 
+\item[ADJ] Les adjectifs qui caractérisent le nom et s'accordant en genres et en nombres. 
+\item[ADV] Les adverbes qui précisent le sens d'un verbe et marque le degré d'intensité de la phrase. 
+\item[INTJ] Les interjections qui montrent l'exclammation. 
+\item[NOUN] Les noms qui désignent une réalité concrète ou abstraite et s'accordant en genres et en nombres. 
+\item[PROPN] Les noms propres qui désignent le nom d'un individu, un lieu ou un objet spécifique. 
+\item[VERB] Les verbes qui est les noyaux de la phrase, ils expriment un état ou une action et varient en personne. 
+\item[DET] Les déterminants précèdent un nom et qui marque le genre et le nombre de celui-ci. 
+\item[NUM] Les chiffres qui expriment un nombre et une relation avec un nombre. 
+\item[PRON] Les pronoms qui désignent une personne et remplacent un élément déjà nommé. 
+\item[CCONJ] Les conjonctions de coordinations qui permettent de relier deux mots, propositions et phrases. 
+\item[AUX] Les auxiliaires qui sont des verbes qui se combinent à un verbe principale afin de constituer un temps composé, expriment le temps, le mode et la voix. 
+\item[ADP] Les prépositions qui permettent de relier un nom, verbe ou adjectif à un nom, pronom, adverbe ou à un verbe. 
+\item[SCONJ] Les conjonctions de subordinations permettant d'introduire une proposition subordonnée. 
+\item[PART] Les particules qui permettent de donner un sens une fois associés à un mot. 
+\item[PUNCT] Les ponctuations qui permettent l'organisation de l'écrit en indiquant les pauses et intonations ou en précisant le sens de la phrase. 
+\item[SYM] Les symboles qui sont des mots spéciaux différants des mots ordinaires par leurs formes, fonctions ou les deux. 
+\item[X] Les autres qui sont des mots ne pouvant être assignés aux autres classes grammaticales. 
+\end{description}
+
+
+\subsection{Objectif}
+Notre objectif est d'implémenter et d'entraîner
+un neurone artificiel afin de prédire
+la nature de chaque mot, connaissant son contexte
+(égal à la phrase dans lequel il se trouve).
+
+
+Pour cela, nous disposons de plusieurs jeux de données provenant pour
+la plupart de la base \emph{ Universal Dependencies }. Nous avons
+écarté les \emph{dataset} en anglais pour nous concentrer sur les
+données écrites en Français. Ces données seront décrites plus en
+détail dans la deuxième partie.
+
+
+\subsection{Plan}
+Dans un premier temps, nous allons décrire les données, et montrer
+quelques informations sur ces dernières. \\
+Ensuite, nous présenterons la structure et le contenu du code, ainsi
+que les perceptrons et la modélisation choisie \\
+Nous montrerons et expliquerons les résultats obtenus,
+avant de conclure.
+
+
+%Grâce à ces données, nous avons voulu créer un perceptron utilisant
+%différents modèles pouvant prédire l'étiquetage morpho-syntaxique des
+%mots dans les  phrases. Nous avons aussi voulu construire plusieurs
+%fonctions d'analyses afin d'étudier les données à notre dispositions. 

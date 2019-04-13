@@ -15,10 +15,6 @@ def mk_lbl_set(dataset):
             ret_dict.add(i)
     return ret_dict
 
-
-
-
-    
 """
 Construit une représentation éparse a priori meilleure
 [00:11]Rémi:
@@ -86,8 +82,9 @@ class Modele_tp5(modele.Modele):
         self.lbls = mk_lbl_set(train_data)
         self.p = mp.Perceptron(self.lbls)
 
-    def train(self, train_data):
-        train(train_data, self.p)
+    def train(self, train_data, epoch = 10):
+        for i in range(epoch):
+            train(train_data, self.p)
 
     def reset(self):
         self.lbls = None
@@ -100,3 +97,5 @@ class Modele_tp5(modele.Modele):
     def test(self, test_set):
         return test(test_set, self.p)
 
+    def get_str(self):
+        return 'Modele tp5'

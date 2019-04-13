@@ -1,0 +1,25 @@
+\section{Présentation des données}
+Comme dit précédemment, nous avons à dispositions plusieurs sets de
+données en anglais et en français. Nous utiliserons uniquement les
+sets de données en français.
+
+
+Ces données sont sous forme de fichiers {\verb .json }, chaque
+fichier correspond à un \emph{ dataset }, qui est un ensemble de
+couples (phrase, labels), ou chaque label $\in$ labels correspond à la
+nature grammatical du mot correspondant.
+
+
+Pour chaque set de données, nous indiquons les informations suivantes: 
+\begin{description}
+\item[Présentation brève du dataset]
+\item[Pourcentage des mots hors vocabulaire] Pourcentage de mots
+  apparaissant uniquement dans les données de test, par rapport à
+  l'ensemble du vocabulaire
+\item[KL-Divergence] La divergence de Kullback-Leibler entre les
+  données d'entraînement et de test
+\item[Distribution des différents labels] dans le dataset
+\item[Mots les plus utilisés] dans le dataset
+\end{description}
+
+\input{description_donnees}

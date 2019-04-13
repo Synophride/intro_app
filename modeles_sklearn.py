@@ -4,31 +4,28 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import Perceptron
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import Pipeline
-
+"""
+     'is_first': index == 0,
+     'is_last': index == len(sentence) - 1,
+"""
 def mk_features(sentence, index):
-    """ sentence: [w1, w2, ...], index: the index of the word """
     return {
         'word': sentence[index],
-        'is_first': index == 0,
-        'is_last': index == len(sentence) - 1,
-        'is_capitalized': sentence[index][0].upper() == sentence[index][0],
-        'is_all_caps': sentence[index].upper() == sentence[index],
-        'is_all_lower': sentence[index].lower() == sentence[index],
-        'prefix-1': sentence[index][0],
-        'prefix-2': sentence[index][:2],
+        'is_capitalized': sentence[index][0].isupper(),
+        'is_all_caps': sentence[index].isupper(),
         'prefix-3': sentence[index][:3],
-        'suffix-1': sentence[index][-1],
         'suffix-2': sentence[index][-2:],
         'suffix-3': sentence[index][-3:],
         'prev_word': '' if index == 0 else sentence[index - 1],
         'next_word': '' if index == len(sentence) - 1 else sentence[index + 1],
         'has_hyphen': '-' in sentence[index],
         'is_numeric': sentence[index].isdigit(),
-        'capitals_inside': sentence[index][1:].lower() != sentence[index][1:]}
+        'capitals_inside': sentence[index][1:].lower() != sentence[index][1:]
+    }
 
 def trs_data(data):
     features_list = []
-    label_list = []
+    label_list    = []
     for x in data:
         sentence = x[0]
         lbls = x[1]
@@ -36,16 +33,16 @@ def trs_data(data):
             features_list.append(mk_features(sentence, i))
             label_list.append(lbls[i])
     return (features_list, label_list)
-            
-class Modele_skl(m.Modele):
 
+
+class Modele_skl(m.Modele):
     def __init__(self):
         pass
     
     def init_train(self, train_data):
         pass
         
-    def train(self, train_data):
+    def train(self, train_data, epoch=-1):
         (feats, labels) = trs_data(train_data)
         self.clf.fit(feats, labels)
             
@@ -72,10 +69,15 @@ class Modele_sklearn_Perceptron(Modele_skl):
         self.labels = hp.mk_lbl_set(train_data)
         self.clf = Pipeline( [('vectorizer', DictVectorizer()),
                               ('classifier', Perceptron()) ])
+    def get_str(self):
+        return 'SKLearn Perceptron'
     
 class Modele_sklearn_SVM(Modele_skl):
     def init_train(self, train_data):
         self.labels = hp.mk_lbl_set(train_data)
         self.clf = Pipeline( [('vectorizer', DictVectorizer()),
                               ('classifier', LinearSVC()) ])
-        
+    def get_str(self):
+        return 'SKLearn SVM'
+
+    
