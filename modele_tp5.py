@@ -17,10 +17,6 @@ def mk_lbl_set(dataset):
 
 """
 Construit une représentation éparse a priori meilleure
-[00:11]Rémi:
-  du coup, moi ce que j'ai fait c'est que mon dictionnaire est comme ça : 
-  clé = critère + valeur du critère 
-  valeur = 1
 """
 def build_sparse2(sentence, pos):
     ret = dict()

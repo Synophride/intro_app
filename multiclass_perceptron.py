@@ -1,10 +1,5 @@
 from collections import defaultdict
-'''
-[00:15]Julien Guyot: et du coup comment tu fais pour faire le produit ? :sueur~2:
-[00:16]Alban: 
-For i in list ou for i in dict.keys():
-Product += weights[i][label]
-'''
+
 class Perceptron:
     # censé effectuer la traduction    
     def __init__(self, labels):
@@ -64,10 +59,6 @@ class Perceptron:
         return (1 if y == pred else 0) 
 
 
-    '''
-    Pour calculer le "score", il faut faire le produit matriciel (ou produit scalaire, 
-    je suis pas sûr). Pour faire ce dernier, il faut faire ça (source Alban©)
-    '''
     def product_for_lbl(self, lbl, features):
         product = 0
         for i in features.keys():
