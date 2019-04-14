@@ -1,19 +1,128 @@
-\subsection{Résultats généraux}
+\section{Résultats}
 Dans un premier temps, voici les résultats des modèles sur le
 dataset {\verb ftb }
+
 \input{fast_results}
+
+
 
 Nous remarquons que :
 \begin{itemize}
+\item Les résultats sont bons sur cet ensemble de données (avec
+  plus de 90 \% à chaque fois.
+  Cela reste à relativiser, étant donné que ces données d'entraînement sont
+  de loin les plus conséquentes, avec plus de 14000 phrases.
 \item La construction du dictionnaire nécessaire aux
-  \emph{distributional features} prend beaucoup de temps (notamment
-  sur FTB) 
+  \emph{distributional features} prend beaucoup de temps.
+\item Les \emph{distributional features} que l'on a construit
+  ne servent à rien; au contraire elles baissent le score de réussite sur
+  le \emph{dataset} {\verb ftb }.
+  Cela est probablement dû à une mauvais compréhension de l'article,
+  ayant mené à une mauvaise implémentation.
 \end{itemize}
 
-Maintenant, si l'on s'intéresse de plus près 
-%Tableaux
-\input{SKLearn_SVM}
-\input{SKLearn_Perceptron}
+Maintenant, nous allons nous intéresser à des tableaux de résultats
+plus détaillés. Pour chacun de ces tableaux, chaque colonne représente
+un ensemble d'entraînement, tandis que chaque ligne représente un
+ensemble de test. 
+
+
+Pour chaque ensemble d'entraînement de de test, nous avons trois
+mesures, toutes exprimées en pourcentage :
+\begin{description}
+\item[OOV] La réussite sur les mots hors vocabulaire, ie les mots
+  apparaissant dans l'ensemble de test mais pas dans l'ensemble
+  d'entrainement.
+\item[AMB] La réussite sur les mots ambigus, qui apparaissent dans les
+  données de train ou de test, et qui peuvent avoir deux natures
+  différentes
+\item[GEN] Le taux de réussite général.
+\end{description}
+
+\input{Modele_tp5}
+
+De manière générale, le score de 90\% sur la réussite des données
+était flatteur, la plupart des résultats tournant autour de 80\%
+
+Nous remarquons que les scores les plus bas sur les tests
+proviennent des ensembles de test natdis et foot
+(resp. autour de 80 et 70 \% sur la plupart des corpus).
+
+
+Deux explications pourraient exister : La première étant que, de
+manière générale, les tweets sont rarement écrits dans un français
+correct,
+la seconde serait que ces derniers contiennent
+un grand nombre de labels spécifiques
+(par exemple les mentions) à twitter.
+
+
+Par conséquent, des scores particulièrement bas sur ces \emph{dataset}
+se retrouveront avec les autres classifieurs.
+
+
 \input{Perceptron_distrib}
 \input{Perceptron_nodistrib}
-\input{Modele_tp5}
+Nous remarquons que la plus grosse différence entre les deux consiste
+en le score de réussite dans la classification
+des mots hors vocabulaire, mais aussi et surtout que le score général 
+des mots hors-vocabulaire est très bas par rapport aux autres
+classifieurs, dont celui du TP5 \\
+Etant donné que toutes les features du TP5 sont présentes dans ce
+perceptron, l'explication la plus logique est que les features
+ajoutées ne sont pas utiles, et que par conséquent en ajoutant ces
+features on complexifie les calculs, ce qui cause cette baisse de la
+précision , spécifiqument sur les calculs des mots hors vocabulaire.
+\\
+Cela est montré par le fait que le perception possédant les
+\emph{distributional features} est légèrement moins précis, notamment
+sur les mots hors vocabulaire. \\
+
+\input{SKLearn_Perceptron}
+
+Ici, les résultats sont légèrement meilleurs que le perceptron du
+TP5. Cela est plausiblement dû soit à une meilleure implémentation de
+l'algorithme (ou une meilleure extraction des features avec
+{\verb DictVectorizer } ).
+ou à un nombre d'epoch plus élevé. 
+
+
+L'amélioration la plus sensible par rapport au TP5
+est le meilleur score sur les mots
+hors-vocabulaire. 
+\\
+
+\input{SKLearn_SVM}
+
+Nous notons des performances légèrement meilleures partout pour le SVM
+que pour le Perceptron (l'implémentation de SKLearn), malgré le même
+set de features.
+
+Cela est logique, puisque le premier est un
+algorithme plus évolué que le second, qui par conséquent permet une
+meilleure précision.
+
+
+
+
+%%%  
+%D'après nos résultats, nos modèles ont un résultat pratiquement
+%similaire avec seulement 3\%  de différence entre le plus mauvais modèles, 
+%Perceptron nodistrib, et le meilleur, SKLearn SVM.
+%Nous remarquons par ailleurs les modèles perdent du résultats en
+%majeur partis à cause du  corpus foot, 
+%en effet le corpus foot ne possède que très peu de vocabulaires
+%similaires aux autres corpus dû à 
+%son vocabulaire spécifique avec en moyenne moins de 40\% de
+%vocabulaire reconnus.  Ce qui permet d'avoir des résultats à peine
+%bons avec une moyenne  générale des modèles autours des 60\%
+%seulement. Quant à natdis , notre second corpus sans trains, il
+%possède aussi un vocabulaire  spécifique puisque moins de 50\% du
+%vocabulaire dans le test   est reconnus. Cependant, il possède de
+%meilleurs résultats généraux  que foot avec une moyenne autour des
+%70\%. On peut en déduire  que le vocabulaire spécifique est
+%généralement peu retrouvé et   donc que l'OOV et les résultats sont en
+%corrélation, en effet  lorsque l'on regarde d'autres résultats comme
+%spoken.train  et sequoia.test avec un OOV de 40\% en moyenne,
+%le résultat n'est autour que des 60\% pour les modèles les moins bons. 
+ 

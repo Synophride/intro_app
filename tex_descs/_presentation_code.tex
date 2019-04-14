@@ -1,10 +1,11 @@
 \section{Présentation du code}
 Le code est regroupé dans les fichiers suivants:
+
 \begin{description}
 \item[helpers.py] Regroupe des fonctions utiles pour le chargement des
   données ou le test des résultats.
 \item[tex\_data\_describe.py et tex\_result\_describe.py] Regroupe des fonctions
-  utile pour (respectivement) décrire les données ou les
+  utiles pour (respectivement) décrire les données ou les
   résultats vers un ou plusieurs fichiers \LaTeX
 \item[modele.py] fournit une interface commune aux différents
   classifieurs. 
@@ -40,15 +41,23 @@ suivantes : \\
 
 \begin{itemize}
 \item Le mot $w$
-\item Les trois derniers caractères de $w$
-\item Le premier caractère de $w$
+\item Les trois derniers caractères de $w$. Le suffixe d'un mot
+  est important pour déterminer le label, car certains de ces suffixes
+  peuvent être porteurs de sens (par exemple, ``ant'' indiquerait une
+  forte probabilité que le mot soit un participe présent)
+\item Le premier caractère de $w$ 
 \item Le dernier caractère de $w$
 \item un booléen indiquant si le premier caractère est une lettre
-  majuscule 
-\item un booléen indiquant si tout le mot est écrit en majuscule
-\item Le mot précédent dans la phrase
-\item Le mot situé à $pos - 2$ dans la phrase.
-\item Le mot suivant dans la phrase
+  majuscule (peut être utile pour déterminer les noms propres)
+\item un booléen indiquant si tout le mot est écrit en majuscule. 
+\item Le mot précédent dans la phrase. Utile notamment pour
+  différencier des mots ambigus. Par exemple, si l'on recontre le mot
+  ``basse'' apres un déterminant, alors ce dernier sera très
+  probablement un nom, tandis qu'il pourrait être un 
+  adjectif dans un autre contexte
+\item Le mot situé à $pos - 2$ dans la phrase. Même principe que
+  ci-dessus 
+\item Le mot suivant dans la phrase. 
 \item Le mot situé à $pos + 2$ dans la phrase.
 \end{itemize}
 
@@ -70,9 +79,10 @@ Implémentent les features proposées dans le sujet du projet :
   \item le mot contient un chiffre
   \item le mot contient un tiret
   \item le mot est écrit en majuscules
-  \item le mot se finit en {\verb -é }
-  \item le mot se finit en {\verb -er }
-  \item le mot se finit en {\verb -ant }
+  \item le mot se finit en {\verb -é }. (si oui, il y a des chances
+    pour que ce soit un participe passé)
+  \item le mot se finit en {\verb -er } 
+  \item le mot se finit en {\verb -ant } 
   \end{itemize}
 \item les \emph{ distributional features }. Elles sont est composées de deux
   features, qu'on appellera respectivement ``distribution à
@@ -82,7 +92,9 @@ Implémentent les features proposées dans le sujet du projet :
   $w c$ (resp $c w$) apparaît dans le corpus de test. \\
   Les deux features sont égales à ce nombre. On se limite à calculer
   le nombre d'apparitions de ces couples pour $c$ faisant partie des
-  10 mots les plus utilisés.
+  10 mots les plus utilisés. \\
+  Cela semble utile pour pouvoir inférer, par exemple des expressions,
+  ou être plus utile dans le cas de 
 \end{itemize}
 La classe {\verb Modele_nodistrib } n'implémente pas les \emph{
   distributional features}. \\
@@ -102,7 +114,7 @@ Les features sont construites à partir des informations suivantes :
 \item Le mot précédent
 \item Le mot suivant
 \item un booléen indiquant si le mot est un nombre
-\item un booléen indiquant si le mot contient des lettres majuscules  
+\item un booléen indiquant si le mot contient des lettres majuscules
 \end{itemize}
 
 Le dictionnaire représentant les features est donné à une instance de
